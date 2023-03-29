@@ -1815,7 +1815,7 @@ class BayesianOptimizer(ABC):
 			for i, (lower, upper) in enumerate(bounds):
 				self.X[:, i] = self.X[:, i] * (upper - lower) + lower
 
-		for i in range(nsam):
+		for i in range(n_samples):
 			print(f"Sample: {i + 1}")
 			self.set_deep_q_network_params(self.names, self.X[i + (TotalSamples - n_samples)])
 			self.y.append(self.evaluation_function(Plot=False, Start=True, OF=True))
@@ -1908,7 +1908,7 @@ class BayesianOptimizer(ABC):
 														y=False, TotalSamples=initial_samples, training_iterations=training_iterations)
 
 		if remaining_max_iters is not None and remaining_max_iters > 0:
-			best_hyperparameters, best_objective = self.maximize(remaining_max_iters, self.X, self.y, HP_Range_Flipped, save_every=save_every, True)
+			best_hyperparameters, best_objective = self.maximize(remaining_max_iters, self.X, self.y, HP_Range_Flipped, save_every=save_every, model=True)
 		else:
 			max_index = np.argmax(self.y)
 			best_hyperparameters, best_objective = self.X[max_index], self.y[max_index]
@@ -1930,7 +1930,7 @@ class BayesianOptimizer(ABC):
 				return start, mid, end, best_hyperparameters, best_objective
 			return best_hyperparameters, best_objective
 
-	def train(self, initial_samples, training_iterations, selected_hyperparameters, RegisterTime=False, ReturnTime=False, ReturnHP=1, save_every=None, TotalSamples):
+	def train(self, initial_samples, training_iterations, selected_hyperparameters, RegisterTime=False, ReturnTime=False, ReturnHP=1, save_every=None, TotalSamples=0):
 		
 		if not RegisterTime:
 			ReturnTime = False
@@ -1965,10 +1965,11 @@ class BayesianOptimizer(ABC):
 		# Generate initial data and maximize
 		if RegisterTime:
 			start = time.time()
-		self.X, self.y = self.generate_initial_data(initial_samples, HP_Ranges, self.names, save_every=save_every, X=True, y=True, TotalSamples, training_iterations)
+		self.X, self.y = self.generate_initial_data(initial_samples, HP_Ranges, self.names, save_every=save_every, X=True, \
+													y=True, TotalSamples=TotalSamples, training_iterations=training_iterations)
 		if RegisterTime:
 			mid = time.time()
-		best_hyperparameters, best_objective = self.maximize(training_iterations, self.X, self.y, HP_Range_Flipped, save_every=save_every, False)
+		best_hyperparameters, best_objective = self.maximize(training_iterations, self.X, self.y, HP_Range_Flipped, save_every=save_every, model=False)
 		if RegisterTime:
 			end = time.time()
 
@@ -2490,7 +2491,7 @@ BeyOp.set(
 
 HP_Names, best_hyperparameters, best_objective = BeyOp.train(initial_samples=3000, training_iterations=1500, \
 															 selected_hyperparameters=selected_HP, \
-															 RegisterTime=True, ReturnTime=False, ReturnHP=1, save_every=2, 1500)
+															 RegisterTime=True, ReturnTime=False, ReturnHP=1, save_every=2, TotalSamples=1500)
 
 print(HP_Names)
 print(best_hyperparameters)
