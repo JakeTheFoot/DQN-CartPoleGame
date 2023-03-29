@@ -2209,6 +2209,8 @@ class DQNAgent:
 					break
 
 			if Plot or OF:
+				if not len(overall_rewards) > 0:
+					overall_rewards.append(1)
 				PlotDictionary['avg'].append(statistics.mean(overall_rewards))
 				PlotDictionary['min'].append(min(overall_rewards))
 				PlotDictionary['max'].append(max(overall_rewards))
