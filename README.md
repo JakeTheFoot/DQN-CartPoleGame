@@ -1,1 +1,1 @@
-DQN with beyesian optimizer for the cartpole game from open AI's gym library.
+DQN with beyesian optimizer for the cartpole game from open AI's gym library. Please note: I do not claim credit for all code here. I have built the bayesian optimizer, along with the convolutional layers all on my own. The rest is a modified version of code sampled from a variety of useful resources, the primary being Sentdex's (youtube channel) "Neural Networks From Scratch In Python". Enjoy!
